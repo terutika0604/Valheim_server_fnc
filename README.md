@@ -1,6 +1,6 @@
 # Valheim_server_fnc
 
-AWS LambdaとLINE　MessageingAPIを用いてEC2の起動　×「Valheim」ゲームサーバーの起動停止、確認を行うBOT
+AWS LambdaとLINE　MessagingAPIを用いてEC2の起動　×「Valheim」ゲームサーバーの起動停止、確認を行うBOT
 
 ## システム構成
 
