@@ -4,7 +4,8 @@ AWS LambdaとLINE　MessageingAPIを用いてEC2の起動　×「Valheim」ゲ�
 
 ## システム構成
 
-![system](https://user-images.githubusercontent.com/66721120/215973435-0c10d643-961d-4edd-8e50-e9876823f5ab.png)
+![Valheim (1)](https://user-images.githubusercontent.com/66721120/215976494-4f17cdf8-4a7e-477c-a9c0-020f2e090bdc.jpg)
+
 
 
 ## Demo
