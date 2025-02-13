@@ -17,18 +17,14 @@ const params = {
 const client = new line.Client({ channelAccessToken: process.env.ACCESSTOKEN });
 
 const startInstances = async (ec2) => {
-  return new Promise((resolve, reject) => {
-    ec2.startInstances(
-      params,
-      (err, data) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve("スタートしました");
-      }
-    );
-  });
+  try {
+    await ec2.startInstances(params).promise(); // Promiseを直接返す
+    const publicIp = await getInstancePublicIp(ec2);
+    return `スタートしました\nIP: ${publicIp}`;
+  } catch (error) {
+    return `start関数エラー`;
+    throw new Error(`EC2起動失敗: ${error.message}`);
+  }
 };
 
 const stopInstances = async (ec2) => {
@@ -61,6 +57,21 @@ const checkInstances = async (ec2) => {
         resolve(data.InstanceStatuses[0].InstanceState.Name);
       }
     );
+  });
+};
+
+// **EC2のパブリックIPアドレスを取得**
+const getInstancePublicIp = async (ec2) => {
+  return new Promise((resolve, reject) => {
+    ec2.describeInstances({ InstanceIds: [process.env.INSTANCEID] }, (err, data) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      const instance = data.Reservations[0].Instances[0];
+      const publicIp = instance.PublicIpAddress || "IP取得不可";
+      resolve(publicIp);
+    });
   });
 };
 
