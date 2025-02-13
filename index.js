@@ -17,14 +17,18 @@ const params = {
 const client = new line.Client({ channelAccessToken: process.env.ACCESSTOKEN });
 
 const startInstances = async (ec2) => {
-  try {
-    await ec2.startInstances(params).promise(); // Promiseを直接返す
-    const publicIp = await getInstancePublicIp(ec2);
-    return `スタートしました\nIP: ${publicIp}`;
-  } catch (error) {
-    return `start関数エラー`;
-    throw new Error(`EC2起動失敗: ${error.message}`);
-  }
+  return new Promise((resolve, reject) => {
+    ec2.startInstances(
+      params,
+      (err, data) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve("スタートしました");
+      }
+    );
+  });
 };
 
 const stopInstances = async (ec2) => {
@@ -105,6 +109,8 @@ exports.handler = (event, context) => {
             userMessage = await stopInstances(ec2);
         } else if(event.postback.data == "check") {
             userMessage = await checkInstances(ec2);
+            const publicIp = await getInstancePublicIp(ec2);
+            userMessage += `\nPublic IP: ${publicIp}`;
         }
       }
       
